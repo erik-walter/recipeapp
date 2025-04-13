@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/erik-walter/recipeapp/static/css/main.375f858a.css",
+    "main.js": "/erik-walter/recipeapp/static/js/main.6dc5f6b1.js",
+    "index.html": "/erik-walter/recipeapp/index.html",
+    "main.375f858a.css.map": "/erik-walter/recipeapp/static/css/main.375f858a.css.map",
+    "main.6dc5f6b1.js.map": "/erik-walter/recipeapp/static/js/main.6dc5f6b1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.375f858a.css",
+    "static/js/main.6dc5f6b1.js"
+  ]
+}
