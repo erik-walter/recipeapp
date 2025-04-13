@@ -54,18 +54,18 @@ function Popular() {
                 <h3>Eigene Rezepte</h3>
                 <Splide
                     options={{
-                        perPage: 3,
+                        perPage: 4,
                         arrows: false,
                         pagination: false,
                         drag: "free",
-                        gap: "2rem",
+                        gap: "5rem",
                     }}
                 >
                 {recipes.map((recipe) => (
                     <SplideSlide key={recipe.id}>
                         <Card>
                             <p>{recipe.title}</p>
-                            <img src={recipe.image} alt={recipe.title} />
+                            <img src={process.env.PUBLIC_URL+recipe.image} alt={recipe.title} />
                         </Card>
                     </SplideSlide>
                 ))}
