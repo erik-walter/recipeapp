@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/react-splide/css'
+import recipes from "../recipes/ownRecipes.json";
 
 
 function Popular() {
@@ -46,6 +47,28 @@ function Popular() {
                             </SplideSlide>
                         )
                     })}
+                </Splide>
+            </Wrapper>
+
+            <Wrapper>
+                <h3>Eigene Rezepte</h3>
+                <Splide
+                    options={{
+                        perPage: 3,
+                        arrows: false,
+                        pagination: false,
+                        drag: "free",
+                        gap: "2rem",
+                    }}
+                >
+                {recipes.map((recipe) => (
+                    <SplideSlide key={recipe.id}>
+                        <Card>
+                            <p>{recipe.title}</p>
+                            <img src={recipe.image} alt={recipe.title} />
+                        </Card>
+                    </SplideSlide>
+                ))}
                 </Splide>
             </Wrapper>
         </div>

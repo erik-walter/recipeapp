@@ -1,0 +1,17 @@
+[
+    {
+      "id": 1,
+      "title": "Brownies",
+      "image": "/images/brownies.webp",
+      "ingredients": ["Spaghetti", "Spinat", "Knoblauch", "Olivenöl", "Salz", "Pfeffer"],
+      "instructions": "Nudeln kochen, Spinat in Öl anbraten, Knoblauch dazugeben, vermengen."
+    },
+    {
+      "id": 2,
+      "title": "Chili",
+      "image": "/images/flammenkuchen.jpg",
+      "ingredients": ["Lasagneblätter", "Tomatensauce", "Zucchini", "Aubergine", "Käse"],
+      "instructions": "Gemüse schneiden, schichten, backen."
+    }
+  ]
+  
