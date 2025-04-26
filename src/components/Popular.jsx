@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Splide, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/react-splide/css'
-import recipes from "../recipes/ownRecipes.json";
 
 
 function Popular() {
@@ -14,25 +13,43 @@ function Popular() {
     },[]);
 
     const getPopular = async () => {
-        const api = await fetch(
-             `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=9`
-        );
-        const data = await api.json();
-        console.log(data.recipes);
-        setPopular(data.recipes);
+
+        const check = localStorage.getItem('popular');
+
+        if(check){
+            setPopular(JSON.parse(check));
+        }else{
+            const api = await fetch(
+                `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=15`
+            );
+            const data = await api.json();
+
+            localStorage.setItem('popular', JSON.stringify(data.recipes));
+            setPopular(data.recipes);
+        }
+    };
+
+    const clearPopular = () => {
+        localStorage.removeItem('popular');
+        getPopular();
     };
 
     return (
         <div>
             <Wrapper>
-                <h3>Popular Picks</h3>
+                <Header>
+                <h3>Popular Recipes</h3>
+                <ClearButton onClick={clearPopular}>
+                    Show new popular recipes
+                </ClearButton>
+                </Header>
                 <Splide
                     options={{
-                        perPage: 4,
+                        perPage: 5,
                         arrows: false,
                         paginations: false,
                         drag: "free",
-                        gap: "5rem"
+                        gap: "2.5rem"
                     }}
                 >
                     {popular.map((recipe) => {
@@ -49,28 +66,6 @@ function Popular() {
                     })}
                 </Splide>
             </Wrapper>
-
-            <Wrapper>
-                <h3>Eigene Rezepte</h3>
-                <Splide
-                    options={{
-                        perPage: 4,
-                        arrows: false,
-                        pagination: false,
-                        drag: "free",
-                        gap: "5rem",
-                    }}
-                >
-                {recipes.map((recipe) => (
-                    <SplideSlide key={recipe.id}>
-                        <Card>
-                            <p>{recipe.title}</p>
-                            <img src={process.env.PUBLIC_URL+recipe.image} alt={recipe.title} />
-                        </Card>
-                    </SplideSlide>
-                ))}
-                </Splide>
-            </Wrapper>
         </div>
     )
 }
@@ -79,12 +74,23 @@ const Wrapper = styled.div`
     margin: 4rem 0rem;
 `
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  h3 {
+    margin: 0;
+  }
+`;
+
 const Card = styled.div`
   position: relative;
   border-radius: 2rem;
   overflow: hidden;
-  width: 90%;
-  height: 15rem;
+  width: 100%;
+  height: 12rem;
+  margin: 0;
+  padding: 0;
 
   img {
     width: 100%;
@@ -120,5 +126,20 @@ const Card = styled.div`
   }
 `;
 
+const ClearButton = styled.button`
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem; /* kleineres Padding */
+  margin-left: 1rem;
+  border-radius: 0.8rem;
+  font-size: 1rem; /* evtl. etwas kleiner machen */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #ff4c4c;
+  }
+`;
 
 export default Popular
