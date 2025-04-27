@@ -13,21 +13,45 @@ function Popular() {
     },[]);
 
     const getPopular = async () => {
-
         const check = localStorage.getItem('popular');
-
-        if(check){
-            setPopular(JSON.parse(check));
-        }else{
-            const api = await fetch(
-                `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=15`
-            );
-            const data = await api.json();
-
-            localStorage.setItem('popular', JSON.stringify(data.recipes));
-            setPopular(data.recipes);
+    
+        if (check && check !== "undefined") {
+            try {
+                setPopular(JSON.parse(check));
+            } catch (error) {
+                console.error('Fehler beim Parsen von localStorage:', error);
+                localStorage.removeItem('popular');
+            }
+        } else {
+            try {
+                const api = await fetch(
+                    `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=15`
+                );
+    
+                if (api.status === 429) {
+                    console.error("Too many requests! Bitte warte bis morgen oder kontrolliere dein API-Limit.");
+                    return;
+                }
+    
+                if (!api.ok) {
+                    console.error("Fetch Fehler:", api.status, api.statusText);
+                    return;
+                }
+    
+                const data = await api.json();
+    
+                if (data.recipes) {
+                    localStorage.setItem('popular', JSON.stringify(data.recipes));
+                    setPopular(data.recipes);
+                } else {
+                    console.error('API Antwort enthält keine Rezepte!', data);
+                }
+            } catch (error) {
+                console.error('Netzwerk oder andere Fehler:', error);
+            }
         }
     };
+    
 
     const clearPopular = () => {
         localStorage.removeItem('popular');
