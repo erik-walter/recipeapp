@@ -13,21 +13,45 @@ function Veggie() {
     },[]);
 
     const getVeggie = async () => {
-
-        const check = localStorage.getItem('veggie');
-
-        if(check){
-          setVeggie(JSON.parse(check));
-        }else{
-            const api = await fetch(
-                `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=15&tags=vegetarian`
-            );
-            const data = await api.json();
-
-            localStorage.setItem('veggie', JSON.stringify(data.recipes));
-            setVeggie(data.recipes);
-        }
-    };
+      const check = localStorage.getItem('veggie');
+  
+      if (check && check !== "undefined") {
+          try {
+              setVeggie(JSON.parse(check));
+          } catch (error) {
+              console.error('Fehler beim Parsen von veggie localStorage:', error);
+              localStorage.removeItem('veggie');
+          }
+      } else {
+          try {
+              const api = await fetch(
+                  `https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_KEY}&number=15&tags=vegetarian`
+              );
+  
+              if (api.status === 429) {
+                  console.error("Too many requests! (veggie)");
+                  return;
+              }
+  
+              if (!api.ok) {
+                  console.error("Fetch Fehler bei veggie:", api.status, api.statusText);
+                  return;
+              }
+  
+              const data = await api.json();
+  
+              if (data.recipes) {
+                  localStorage.setItem('veggie', JSON.stringify(data.recipes));
+                  setVeggie(data.recipes);
+              } else {
+                  console.error('API Antwort enthält keine vegetarischen Rezepte!', data);
+              }
+          } catch (error) {
+              console.error('Netzwerk- oder anderer Fehler bei veggie:', error);
+          }
+      }
+  };
+  
 
     const clearVeggie = () => {
         localStorage.removeItem('veggie');
